@@ -7,7 +7,7 @@ public Plugin:myinfo =
 {
 	name = "Poor-buy",
 	author = "Letaryat",
-	description = "Buying unavailable weapons (M4A1S, CZ75a, R8 via chat commands)",
+	description = "Buying unavailable weapons (M4A1S, CZ75a, R8) via chat commands",
 	version = "1.0"
 }
 
@@ -24,7 +24,7 @@ public Action:Command_M4A1(client, args)
 		PrintToChat(client, "\x04[M4A1S] \x02 Musisz zyc");
 	else
 	{	
-		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount"); // get money	
+		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount"); 
 		if(clientMoney >= 2900)
 		{
 		if(GetClientTeam(client) == 3)
@@ -52,7 +52,7 @@ public Action:Command_CZ(client, args)
 		PrintToChat(client, "\x04[CZ75A] \x02 Musisz zyc");
 	else
 	{	
-		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount"); // get money	
+		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
 		if(clientMoney >= 500)
 		{
 		if ((weaponIndex = GetPlayerWeaponSlot(client, 1)) != -1)
@@ -75,7 +75,7 @@ public Action:Command_REW(client, args)
 		PrintToChat(client, "\x04[R8] \x02 Musisz zyc");
 	else
 	{	
-		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount"); // get money	
+		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
 		if(clientMoney >= 600)
 		{
 		if ((weaponIndex = GetPlayerWeaponSlot(client, 1)) != -1)
