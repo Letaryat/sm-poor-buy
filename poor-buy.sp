@@ -2,6 +2,7 @@
 #include <cstrike>
 #include <sdktools>
 new weaponIndex;
+bool g_bBuyTimeExpired;
 
 public Plugin:myinfo =
 {
@@ -16,15 +17,32 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_m4a1s", Command_M4A1, "Kupuje M4A1S");
 	RegConsoleCmd("sm_cz75a", Command_CZ, "Kupuje CZ75a");
 	RegConsoleCmd("sm_r8", Command_REW, "Kupuje Rewolwer");
+	HookEvent("buytime_ended", BuyTime_Ended, EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
+}
+
+public void BuyTime_Ended(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bBuyTimeExpired = true;
+}
+public void RoundStartEvent(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bBuyTimeExpired = false;
 }
 
 public Action:Command_M4A1(client, args)
 {
-	if(!IsPlayerAlive(client))
+	if(!IsPlayerAlive(client)){
 		PrintToChat(client, "\x04[M4A1S] \x02 Musisz zyc");
+	}
 	else
 	{	
-		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount"); 
+	if(g_bBuyTimeExpired){
+		PrintToChat(client, "\x04[M4A1S] \x02 Koniec kupowania!");
+	}
+	else
+	{
+		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
 		if(clientMoney >= 2900)
 		{
 		if(GetClientTeam(client) == 3)
@@ -43,15 +61,22 @@ public Action:Command_M4A1(client, args)
 			PrintToChat(client, "\x04[M4A1S]\x02 Nie masz wystarczajaco pieniedzy");
 		}
 	}
+	}
 	return Plugin_Handled;
 }
 
 public Action:Command_CZ(client, args)
 {
-	if(!IsPlayerAlive(client))
-		PrintToChat(client, "\x04[CZ75A] \x02 Musisz zyc");
+	if(!IsPlayerAlive(client)){
+	PrintToChat(client, "\x04[CZ75A] \x02 Musisz zyc");
+	}
 	else
 	{	
+	if(g_bBuyTimeExpired){
+		PrintToChat(client, "\x04[CZ75A] \x02 Koniec kupowania!");
+	}
+	else
+	{
 		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
 		if(clientMoney >= 500)
 		{
@@ -66,15 +91,21 @@ public Action:Command_CZ(client, args)
 			PrintToChat(client, "\x04[CZ75A]\x02 Nie masz wystarczajaco pieniedzy");
 		}
 	}
+	}
 	return Plugin_Handled;
 }
 
 public Action:Command_REW(client, args)
 {
-	if(!IsPlayerAlive(client))
-		PrintToChat(client, "\x04[R8] \x02 Musisz zyc");
+	if(!IsPlayerAlive(client)){
+	PrintToChat(client, "\x04[R8] \x02 Musisz zyc");
+	}
 	else
 	{	
+	if(g_bBuyTimeExpired){
+		PrintToChat(client, "\x04[R8] \x02 Koniec kupowania!");
+	}
+	else{
 		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
 		if(clientMoney >= 600)
 		{
@@ -88,6 +119,7 @@ public Action:Command_REW(client, args)
 		{
 			PrintToChat(client, "\x04[R8]\x02 Nie masz wystarczajaco pieniedzy");
 		}
+	}
 	}
 	return Plugin_Handled;
 }
