@@ -4,6 +4,7 @@
 new weaponIndex;
 bool g_bBuyTimeExpired;
 
+
 public Plugin:myinfo =
 {
 	name = "Poor-buy",
@@ -19,6 +20,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_r8", Command_REW, "Kupuje Rewolwer");
 	HookEvent("buytime_ended", BuyTime_Ended, EventHookMode_PostNoCopy);
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
+
 }
 
 public void BuyTime_Ended(Event event, const char[] name, bool dontBroadcast)
@@ -39,6 +41,10 @@ public Action:Command_M4A1(client, args)
 	{	
 	if(g_bBuyTimeExpired){
 		PrintToChat(client, "\x04[M4A1S] \x02 Koniec kupowania!");
+	}
+	if(!GetEntProp(client, Prop_Send, "m_bInBuyZone"))
+	{
+	    PrintToChat(client, "\x04[M4A1S] \x02 Nie jestes w strefie kupowania!!");
 	}
 	else
 	{
@@ -77,6 +83,10 @@ public Action:Command_CZ(client, args)
 	if(g_bBuyTimeExpired){
 		PrintToChat(client, "\x04[CZ75A] \x02 Koniec kupowania!");
 	}
+	if(!GetEntProp(client, Prop_Send, "m_bInBuyZone"))
+	{
+	    PrintToChat(client, "\x04[CZ75A] \x02 Nie jestes w strefie kupowania!!");
+	}
 	else
 	{
 		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
@@ -106,6 +116,10 @@ public Action:Command_REW(client, args)
 	{	
 	if(g_bBuyTimeExpired){
 		PrintToChat(client, "\x04[R8] \x02 Koniec kupowania!");
+	}
+	if(!GetEntProp(client, Prop_Send, "m_bInBuyZone"))
+	{
+	    PrintToChat(client, "\x04[R8] \x02 Nie jestes w strefie kupowania!!");
 	}
 	else{
 		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
