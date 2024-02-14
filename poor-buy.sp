@@ -47,6 +47,8 @@ public Action:Command_M4A1(client, args)
 		{
 		if(GetClientTeam(client) == 3)
 		{
+			if ((weaponIndex = GetPlayerWeaponSlot(client, 0)) != -1)
+			CS_DropWeapon(client, weaponIndex, true, false);
 			SetEntProp(client, Prop_Send, "m_iAccount", clientMoney - 2900);
 			GivePlayerItem(client, "weapon_m4a1_silencer");
 			PrintToChat(client, "\x04[M4A1S]\x06 Kupiles M4A1S");
@@ -81,7 +83,7 @@ public Action:Command_CZ(client, args)
 		if(clientMoney >= 500)
 		{
 		if ((weaponIndex = GetPlayerWeaponSlot(client, 1)) != -1)
-		RemovePlayerItem(client, weaponIndex);
+		CS_DropWeapon(client, weaponIndex, true, false);
 		SetEntProp(client, Prop_Send, "m_iAccount", clientMoney - 500);
 		GivePlayerItem(client, "weapon_cz75a");
 		PrintToChat(client, "\x04[CZ75A]\x06 Kupiles CZ75a");
@@ -110,7 +112,7 @@ public Action:Command_REW(client, args)
 		if(clientMoney >= 600)
 		{
 		if ((weaponIndex = GetPlayerWeaponSlot(client, 1)) != -1)
-		RemovePlayerItem(client, weaponIndex);
+		CS_DropWeapon(client, weaponIndex, true, false);
 		SetEntProp(client, Prop_Send, "m_iAccount", clientMoney - 600);
 		GivePlayerItem(client, "weapon_revolver");
 		PrintToChat(client, "\x04[R8]\x06 Kupiles Rewolwer");
