@@ -4,7 +4,6 @@
 new weaponIndex;
 bool g_bBuyTimeExpired;
 
-
 public Plugin:myinfo =
 {
 	name = "Poor-buy",
@@ -18,6 +17,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_m4a1s", Command_M4A1, "Kupuje M4A1S");
 	RegConsoleCmd("sm_cz75a", Command_CZ, "Kupuje CZ75a");
 	RegConsoleCmd("sm_r8", Command_REW, "Kupuje Rewolwer");
+	RegConsoleCmd("sm_kup", Menu_Kup);
 	HookEvent("buytime_ended", BuyTime_Ended, EventHookMode_PostNoCopy);
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 
@@ -140,3 +140,70 @@ public Action:Command_REW(client, args)
 	return Plugin_Handled;
 }
 
+
+public int Menu_Callback(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch(action)
+	{
+		case MenuAction_Start:
+		{
+			PrintToServer("Display Menu");
+		}
+		
+		case MenuAction_Select:
+		{
+			char info[32];
+			menu.GetItem(param2, info, sizeof(info));
+			PrintToServer("Client: %d wybral %s", param1, info);
+			if(StrEqual(info, "m4a1s"))
+			{
+				FakeClientCommand(param1, "sm_m4a1s");
+			}
+			if(StrEqual(info, "cz75a"))
+			{
+				FakeClientCommand(param1, "sm_cz75a");
+			}
+			if(StrEqual(info, "r8"))
+			{
+				FakeClientCommand(param1, "sm_r8");
+			}
+		}
+		
+		case MenuAction_End:
+		{
+			delete menu;
+		}
+		
+	}
+	return 0;
+}
+
+
+public Action Menu_Kup(client, args)
+{
+	if(!IsPlayerAlive(client)){
+		PrintToChat(client, "\x04[Menu] \x02 Musisz zyc");
+	}
+	else
+	{
+		if(g_bBuyTimeExpired){
+			PrintToChat(client, "\x04[Menu] \x02 Koniec kupowania!");
+		}
+		if(!GetEntProp(client, Prop_Send, "m_bInBuyZone"))
+		{
+			PrintToChat(client, "\x04[Menu] \x02 Nie jestes w strefie kupowania!!");
+		}
+		else{
+		  Menu menu = new Menu(Menu_Callback);
+		  menu.SetTitle("Bronska");
+		  if(GetClientTeam(client) == 3){
+			menu.AddItem("m4a1s", "M4A1S");
+		  } 
+		  menu.AddItem("cz75a", "CZ75a");
+		  menu.AddItem("r8", "R8");
+		  menu.ExitButton = true;
+		  menu.Display(client, 30);
+		}
+	}
+	return Plugin_Handled;
+}

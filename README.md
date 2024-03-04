@@ -1,5 +1,6 @@
 # sm-poor-buy
 Sourcemod plugin for CSGO Legacy that allows you to buy weapons that are unavailable via commands such as:
+- !kup - Buy menu,
 - M4A1s (Only for CT) - !m4a1s,
 - CZ75a - !cz75a
 - Revolver - !r8
