@@ -8,13 +8,14 @@ public Plugin:myinfo =
 {
 	name = "Poor-buy",
 	author = "Letaryat",
-	description = "Buying unavailable weapons (M4A1S, CZ75a, R8) via chat commands",
+	description = "Buying unavailable weapons (USP-S, M4A1S, CZ75a, R8) via chat commands",
 	version = "1.0"
 }
 
 public void OnPluginStart()
 {
 	RegConsoleCmd("sm_m4a1s", Command_M4A1, "Kupuje M4A1S");
+	RegConsoleCmd("sm_usp", Command_USP, "Kupuje USP");
 	RegConsoleCmd("sm_cz75a", Command_CZ, "Kupuje CZ75a");
 	RegConsoleCmd("sm_r8", Command_REW, "Kupuje Rewolwer");
 	RegConsoleCmd("sm_kup", Menu_Kup);
@@ -67,6 +68,46 @@ public Action:Command_M4A1(client, args)
 		else
 		{
 			PrintToChat(client, "\x04[M4A1S]\x02 Nie masz wystarczajaco pieniedzy");
+		}
+	}
+	}
+	return Plugin_Handled;
+}
+
+public Action:Command_USP(client, args)
+{
+	if(!IsPlayerAlive(client)){
+		PrintToChat(client, "\x04[USP] \x02 Musisz zyc");
+	}
+	else
+	{	
+	if(g_bBuyTimeExpired){
+		PrintToChat(client, "\x04[USP] \x02 Koniec kupowania!");
+	}
+	if(!GetEntProp(client, Prop_Send, "m_bInBuyZone"))
+	{
+	    PrintToChat(client, "\x04[USP] \x02 Nie jestes w strefie kupowania!!");
+	}
+	else
+	{
+		int clientMoney = GetEntProp(client, Prop_Send, "m_iAccount");
+		if(clientMoney >= 200)
+		{
+		if(GetClientTeam(client) == 3)
+		{
+			if ((weaponIndex = GetPlayerWeaponSlot(client, 1)) != -1)
+			CS_DropWeapon(client, weaponIndex, true, false);
+			GivePlayerItem(client, "weapon_usp_silencer");
+			PrintToChat(client, "\x04[USP]\x06 Kupiles USP");
+		}
+		else
+			{
+			PrintToChat(client, "\x04[USP]\x02 Nie jestes w odpowiedniej druzynie");
+			}
+		}
+		else
+		{
+			PrintToChat(client, "\x04[USP]\x02 Nie masz wystarczajaco pieniedzy");
 		}
 	}
 	}
@@ -159,6 +200,10 @@ public int Menu_Callback(Menu menu, MenuAction action, int param1, int param2)
 			{
 				FakeClientCommand(param1, "sm_m4a1s");
 			}
+			if(StrEqual(info, "usp"))
+			{
+				FakeClientCommand(param1, "sm_usp");
+			}
 			if(StrEqual(info, "cz75a"))
 			{
 				FakeClientCommand(param1, "sm_cz75a");
@@ -197,6 +242,7 @@ public Action Menu_Kup(client, args)
 		  Menu menu = new Menu(Menu_Callback);
 		  menu.SetTitle("Bronska");
 		  if(GetClientTeam(client) == 3){
+			menu.AddItem("usp", "USP");
 			menu.AddItem("m4a1s", "M4A1S");
 		  } 
 		  menu.AddItem("cz75a", "CZ75a");
